@@ -1,50 +1,244 @@
-import { DataGrid } from '@mui/x-data-grid';
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import {
+  DataGrid,
+  GridColDef,
+  GridRenderCellParams,
+  GridRowsProp,
+} from '@mui/x-data-grid';
+import { darken, lighten, styled } from '@mui/material/styles';
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
+import InfoIcon from '@mui/icons-material/Info';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
+import DoneIcon from '@mui/icons-material/Done';
+import Chip from '@mui/material/Chip';
+import moment from 'moment';
 
+const StyledChip = styled(Chip)(({ theme }) => ({
+  justifyContent: 'left',
+  '& .icon': {
+    color: 'inherit',
+  },
+  '&.Open': {
+    color: (theme.vars || theme).palette.info.dark,
+    border: `1px solid ${(theme.vars || theme).palette.info.main}`,
+  },
+  '&.Filled': {
+    color: (theme.vars || theme).palette.success.dark,
+    border: `1px solid ${(theme.vars || theme).palette.success.main}`,
+  },
+  '&.PartiallyFilled': {
+    color: (theme.vars || theme).palette.warning.dark,
+    border: `1px solid ${(theme.vars || theme).palette.warning.main}`,
+  },
+  '&.Rejected': {
+    color: (theme.vars || theme).palette.error.dark,
+    border: `1px solid ${(theme.vars || theme).palette.error.main}`,
+  },
+}));
 
-import {FC} from 'react';
+interface StatusProps {
+  status: string;
+}
 
-// interface Student  {
-//     id: number;
-//     name: string;
-//     location: string;
-//     timestamp: string;
-// }
+const getBackgroundColor = (color: string, mode: string) =>
+  mode === 'dark' ? darken(color, 0.7) : lighten(color, 0.7);
 
+const getHoverBackgroundColor = (color: string, mode: string) =>
+  mode === 'dark' ? darken(color, 0.6) : lighten(color, 0.6);
 
+const getSelectedBackgroundColor = (color: string, mode: string) =>
+  mode === 'dark' ? darken(color, 0.5) : lighten(color, 0.5);
 
-    // const [tableData, setTableData] = useState([])
+const getSelectedHoverBackgroundColor = (color: string, mode: string) =>
+  mode === 'dark' ? darken(color, 0.4) : lighten(color, 0.4);
 
-    // useEffect(() => {
-    //     fetch("https://jsonplaceholder.typicode.com/posts") //TODO: replace with real call
-    //     .then((data) => data.json())
-    //     .then((data) => setTableData(data))
-    //
-    // }, [])
+const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
+  '& .super-app-theme--true': {
+    backgroundColor: getBackgroundColor(
+      theme.palette.success.main,
+      theme.palette.mode
+    ),
+    '&:hover': {
+      backgroundColor: getHoverBackgroundColor(
+        theme.palette.success.main,
+        theme.palette.mode
+      ),
+    },
+    '&.Mui-selected': {
+      backgroundColor: getSelectedBackgroundColor(
+        theme.palette.success.main,
+        theme.palette.mode
+      ),
+      '&:hover': {
+        backgroundColor: getSelectedHoverBackgroundColor(
+          theme.palette.success.main,
+          theme.palette.mode
+        ),
+      },
+    },
+  },
 
+  '& .super-app-theme--false': {
+    backgroundColor: getBackgroundColor(
+      theme.palette.error.main,
+      theme.palette.mode
+    ),
+    '&:hover': {
+      backgroundColor: getHoverBackgroundColor(
+        theme.palette.error.main,
+        theme.palette.mode
+      ),
+    },
+    '&.Mui-selected': {
+      backgroundColor: getSelectedBackgroundColor(
+        theme.palette.error.main,
+        theme.palette.mode
+      ),
+      '&:hover': {
+        backgroundColor: getSelectedHoverBackgroundColor(
+          theme.palette.error.main,
+          theme.palette.mode
+        ),
+      },
+    },
+  },
+}));
 
-    const rows = [
-        {id:1, name: "john doe", location:"inside", lastModified: "234234"},
-        {id:2, name: "jane doe", location:"outside", lastModified: "12312312"},
-        {id:3, name: "jim doe", location:"outside", lastModified: "12312312"},
-    ]
+export default function StylingRowsGrid() {
+  const Status = React.memo((props: StatusProps) => {
+    const { status } = props;
 
+    let icon: any = null;
+    if (status === 'Out') {
+      icon = <ReportProblemIcon className="icon" />;
+    } else if (status === 'Open') {
+      icon = <InfoIcon className="icon" />;
+    } else if (status === 'PartiallyFilled') {
+      icon = <AutorenewIcon className="icon" />;
+    } else if (status === 'In') {
+      icon = <DoneIcon className="icon" />;
+    }
 
-    const columns = [
-        { field: 'id', headerName: 'ID' },
-        { field: 'name', headerName: 'Name'},
-        { field: 'location', headerName: 'Location'},
-        { field: 'lastModified', headerName: 'Last Modified'},
+    let label: string = status;
+    if (status === 'Out') {
+      label = 'Out';
+    }
+    if (status === 'In') {
+      label = 'In';
+    }
 
-    ]
-
-export const ClassroomView: FC = () => {
-        return (
-        <div style={{ height: 700, width: '100%' }}>
-            <DataGrid
-            rows={rows}
-            columns={columns}
-            // autoPageSize=True
-            />
-        </div>
+    return (
+      <StyledChip
+        className={status}
+        icon={icon}
+        size="small"
+        label={label}
+        variant="outlined"
+      />
     );
-};
+  });
+  function renderStatus(params: GridRenderCellParams<any, string>) {
+    if (params.value == null) {
+      return '';
+    }
+
+    return <Status status={params.value} />;
+  }
+
+  const rows: GridRowsProp = [
+    {
+      id: 1,
+      first_name: 'karl',
+      last_name: 'marx',
+      is_present: true,
+      lastModified: '2008-09-15T15:53:00+05:00',
+      points: 40,
+    },
+    {
+      id: 2,
+      first_name: 'brian',
+      is_present: false,
+      lastModified: '2008-09-15T15:53:00+05:00',
+      points: 3,
+    },
+    {
+      id: 3,
+      first_name: 'Kristen',
+      last_name: null,
+      is_present: false,
+      lastModified: '2008-09-15T15:53:00+05:00',
+      points: -1,
+    },
+  ];
+
+  const columns: GridColDef[] = [
+    {
+      editable: false,
+      field: 'first_name',
+      headerName: 'First Name',
+      width: 150,
+    },
+    {
+      editable: false,
+      field: 'last_name',
+      headerName: 'Last Name',
+      width: 150,
+    },
+    {
+      editable: false,
+      type: 'singleSelect',
+      renderCell: renderStatus,
+      field: 'status',
+      headerName: 'Status',
+      width: 150,
+      valueOptions: ['In', 'Out'],
+      valueGetter: ({ row }) => {
+        if (row.is_present) {
+          return 'In';
+        }
+        return 'Out';
+      },
+    },
+    {
+      editable: false,
+      field: 'points',
+      headerName: 'Points',
+      width: 120,
+
+      type: 'integer',
+      // valueGetter: ({ value }) => value && new Date(value),
+    },
+    {
+      editable: false,
+      field: 'lastModified',
+      headerName: 'Last Scan',
+      width: 225,
+
+      type: 'dateTime',
+      valueGetter: ({ value }) => value && new Date(value),
+      valueFormatter: params => 
+      moment(params?.value).format("MMMM DD, YYYY h:mm A"),
+    },
+  ];
+  // const { data2 } = {
+  //   columns: columns,
+  //   rows: rows,
+  // };
+  return (
+    <Box sx={{ height: 400, width: '100%' }}>
+      <StyledDataGrid
+        // {...data}
+        columns={columns}
+        rows={rows}
+        getRowClassName={(params) => `super-app-theme--${params.row.is_present}`}
+        initialState={{
+          sorting: {
+            sortModel: [{ field: 'status', sort: 'asc' }],
+          },
+        }}
+      />
+    </Box>
+  );
+}
+
