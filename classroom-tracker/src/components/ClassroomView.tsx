@@ -6,34 +6,42 @@ import {
   GridRenderCellParams,
   GridRowsProp,
 } from '@mui/x-data-grid';
-import { darken, lighten, styled } from '@mui/material/styles';
+import {darken, lighten, styled} from '@mui/material/styles';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import InfoIcon from '@mui/icons-material/Info';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import DoneIcon from '@mui/icons-material/Done';
 import Chip from '@mui/material/Chip';
 import moment from 'moment';
+import Button from '@mui/material/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SendIcon from '@mui/icons-material/Send';
+import Stack from '@mui/material/Stack';
+import Fingerprint from '@mui/icons-material/Fingerprint';
 
-const StyledChip = styled(Chip)(({ theme }) => ({
+
+
+
+const StyledChip = styled(Chip)(({ theme  }) => ({
   justifyContent: 'left',
   '& .icon': {
     color: 'inherit',
   },
   '&.Open': {
-    color: (theme.vars || theme).palette.info.dark,
-    border: `1px solid ${(theme.vars || theme).palette.info.main}`,
+    color: theme.palette.info.dark,
+    border: `1px solid ${theme.palette.info.main}`,
   },
   '&.Filled': {
-    color: (theme.vars || theme).palette.success.dark,
-    border: `1px solid ${(theme.vars || theme).palette.success.main}`,
+    color: theme.palette.success.dark,
+    border: `1px solid ${theme.palette.success.main}`,
   },
   '&.PartiallyFilled': {
-    color: (theme.vars || theme).palette.warning.dark,
-    border: `1px solid ${(theme.vars || theme).palette.warning.main}`,
+    color: theme.palette.warning.dark,
+    border: `1px solid ${theme.palette.warning.main}`,
   },
   '&.Rejected': {
-    color: (theme.vars || theme).palette.error.dark,
-    border: `1px solid ${(theme.vars || theme).palette.error.main}`,
+    color: theme.palette.error.dark,
+    border: `1px solid ${theme.palette.error.main}`,
   },
 }));
 
@@ -106,6 +114,8 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
 }));
 
 export default function StylingRowsGrid() {
+    const [isScan, setIsScan] = React.useState<Boolean>(false);
+
   const Status = React.memo((props: StatusProps) => {
     const { status } = props;
 
@@ -226,7 +236,14 @@ export default function StylingRowsGrid() {
   //   rows: rows,
   // };
   return (
-    <Box sx={{ height: 400, width: '100%' }}>
+
+      // <Button variant="outlined" startIcon={<Fingerprint />}>
+      //   Delete
+      // </Button>
+    <Box sx={{ width: '100%' }}>
+          <Box sx={{ height: 400, width: '100%' }}>
+
+
       <StyledDataGrid
         // {...data}
         columns={columns}
@@ -238,6 +255,18 @@ export default function StylingRowsGrid() {
           },
         }}
       />
+    </Box>
+             <Button
+                 // variant="outlined"
+                 startIcon={<Fingerprint />}
+                 variant="contained"
+        onClick={() =>
+          setIsScan(true)
+        }
+      >
+
+         Scan Mode
+             </Button>
     </Box>
   );
 }

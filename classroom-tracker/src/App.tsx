@@ -7,17 +7,23 @@ import Html5QrcodePlugin from './components/Html5QrcodePlugin';
 import ResultContainerPlugin from './components/ResultsContainerPlugin';
 import ClassroomView from './components/ClassroomView';
 import {QrReader} from "react-qr-reader";
-
+import {StyledEngineProvider} from "@mui/material/styles";
 
 
 const handleError = (err: any) => {
   console.error(err);
 };
 
+
+
 function App() {
 
     return (
+            <StyledEngineProvider injectFirst>
+
     <ClassroomView/>
+                    </StyledEngineProvider>
+
     )
 //   // const onNewScanResult = (decodedText: string, decodedResult: Html5QrcodeScanner) => {
 
