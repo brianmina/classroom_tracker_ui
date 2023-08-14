@@ -15,13 +15,16 @@ const handleError = (err: any) => {
 };
 
 
-
 function App() {
+    const [isScanMode, setIsScanMode] = React.useState<Boolean>(false);
 
+    const activateScanMode =  () => {
+        this.setIsScanMode(true);
+    }
     return (
             <StyledEngineProvider injectFirst>
 
-    <ClassroomView/>
+    <ClassroomView activateScanMode={this.activateScanMode}/>
                     </StyledEngineProvider>
 
     )
