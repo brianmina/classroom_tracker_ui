@@ -1,1 +1,1 @@
-export const CLASSROOM_TRACKER_API_URL = "localhost:8000";
+export const CLASSROOM_TRACKER_API_URL = "https://localhost:8000";

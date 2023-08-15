@@ -9,3 +9,4 @@ class AttendanceService {
             .then((response) => response.data )
     }
 }
+export const attendanceService = new AttendanceService();

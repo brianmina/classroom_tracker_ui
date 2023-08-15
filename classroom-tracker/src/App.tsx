@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
+import { attendanceService } from "./service/attendanceService";
 
-import {Html5QrcodeScanner, Html5QrcodeScanType} from 'html5-qrcode';
+// import {Html5QrcodeScanner, Html5QrcodeScanType} from 'html5-qrcode';
 import Html5QrcodePlugin from './components/Html5QrcodePlugin';
-import ResultContainerPlugin from './components/ResultsContainerPlugin';
+//import ResultContainerPlugin from './components/ResultsContainerPlugin';
 import ClassroomView from './components/ClassroomView';
-import {QrReader} from "react-qr-reader";
+//import {QrReader} from "react-qr-reader";
 import {StyledEngineProvider} from "@mui/material/styles";
+import {Html5QrcodeScanType} from "html5-qrcode";
+import StudentScanner from "./components/StudentScanner";
 
 
 const handleError = (err: any) => {
@@ -16,16 +19,45 @@ const handleError = (err: any) => {
 
 
 function App() {
-    const [isScanMode, setIsScanMode] = React.useState<Boolean>(false);
+    const [isScanMode, setIsScanMode] = React.useState<boolean>(false);
+    function onNewScanResult(decodedText: any, decodedResult: any) {
+        // Handle on success condition with the decoded text or result.
+        console.log(`Scan result: ${decodedText}`, decodedResult);
+        if (!isNaN(decodedText)) {
+            attendanceService.scanStudent(parseInt(decodedText));
+        } else {
+            console.log("error decoding ", decodedResult)
+        }
 
+    }
+
+    // function onScanError(errorMessage: any) {
+    //     // handle on error condition, with error message
+    //     console.error(errorMessage)
+    // }
     const activateScanMode =  () => {
-        this.setIsScanMode(true);
+        setIsScanMode(true);
     }
     return (
-            <StyledEngineProvider injectFirst>
+<StyledEngineProvider injectFirst>
 
-    <ClassroomView activateScanMode={this.activateScanMode}/>
-                    </StyledEngineProvider>
+    {isScanMode ?
+        <Html5QrcodePlugin
+            fps={10}
+            qrbox={250}
+            disableFlip={true}
+            // rememberLastUsedCamera={true}
+            qrCodeSuccessCallback={onNewScanResult}
+            supportedScanTypes={[Html5QrcodeScanType.SCAN_TYPE_CAMERA]}
+        />
+        : (
+            <React.StrictMode>
+                <ClassroomView
+                    isScanModeValue={isScanMode}
+                    onActivateScanMode={activateScanMode}/>
+            </React.StrictMode>)}
+    </StyledEngineProvider>
+
 
     )
 //   // const onNewScanResult = (decodedText: string, decodedResult: Html5QrcodeScanner) => {

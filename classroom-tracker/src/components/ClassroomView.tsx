@@ -5,6 +5,7 @@ import {
   GridColDef,
   GridRenderCellParams,
   GridRowsProp,
+  GridValueFormatterParams,
 } from '@mui/x-data-grid';
 import {darken, lighten, styled} from '@mui/material/styles';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
@@ -18,8 +19,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import Stack from '@mui/material/Stack';
 import Fingerprint from '@mui/icons-material/Fingerprint';
-
-
 
 
 const StyledChip = styled(Chip)(({ theme  }) => ({
@@ -113,7 +112,19 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   },
 }));
 
-export default function StylingRowsGrid() {
+
+
+// Child
+type Props = {
+  isScanModeValue?: boolean;
+  onActivateScanMode: () => void;
+
+};
+
+export default function StylingRowsGrid({
+                                          isScanModeValue,
+                                          onActivateScanMode
+                                        }: Props) {
     const [isScan, setIsScan] = React.useState<Boolean>(false);
 
   const Status = React.memo((props: StatusProps) => {
@@ -226,8 +237,11 @@ export default function StylingRowsGrid() {
       width: 225,
 
       type: 'dateTime',
-      valueGetter: ({ value }) => value && new Date(value),
-      valueFormatter: params => 
+      //TODO: make sure we don't need this
+      // valueGetter: ( value ) => {
+      //   return value && new Date(value);
+      // },
+      valueFormatter: (params: { value: any; }) =>
       moment(params?.value).format("MMMM DD, YYYY h:mm A"),
     },
   ];
@@ -261,7 +275,7 @@ export default function StylingRowsGrid() {
                  startIcon={<Fingerprint />}
                  variant="contained"
         onClick={() =>
-          setIsScan(true)
+            onActivateScanMode()
         }
       >
 
