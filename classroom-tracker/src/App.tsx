@@ -24,7 +24,8 @@ function App() {
         // Handle on success condition with the decoded text or result.
         console.log(`Scan result: ${decodedText}`, decodedResult);
         if (!isNaN(decodedText)) {
-            attendanceService.scanStudent(parseInt(decodedText));
+            const result = attendanceService.scanStudent(parseInt(decodedText));
+            console.log(result)
         } else {
             console.log("error decoding ", decodedResult)
         }
@@ -38,7 +39,7 @@ function App() {
     const activateScanMode =  () => {
         setIsScanMode(true);
         // @ts-ignore
-        this.setIsScanMode(true);
+        // this.setIsScanMode(true);
     }
     return (
 <StyledEngineProvider injectFirst>
@@ -48,7 +49,7 @@ function App() {
             fps={10}
             qrbox={250}
             disableFlip={true}
-            // rememberLastUsedCamera={true}
+            rememberLastUsedCamera={true}
             qrCodeSuccessCallback={onNewScanResult}
             supportedScanTypes={[Html5QrcodeScanType.SCAN_TYPE_CAMERA]}
         />

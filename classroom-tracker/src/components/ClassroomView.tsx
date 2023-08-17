@@ -19,9 +19,10 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import Stack from '@mui/material/Stack';
 import Fingerprint from '@mui/icons-material/Fingerprint';
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {axiosInstance} from "../service/axios";
 import { v4 as uuidv4 } from 'uuid';
+import {AxiosResponse} from "axios";
 
 
 
@@ -129,37 +130,30 @@ type Props = {
 export default function StylingRowsGrid({
                                           isScanModeValue,
                                           onActivateScanMode
-                                        }: Props) {
-
-  type StudentType = {
-    id: number,
-    first_name: string,
-    last_name: string,
-    is_present: boolean,
-    lastModified: string,
-    points: number,
-
-  };
-
-export default function StylingRowsGrid() {
+                                        }: Props)  {
     const [isScan, setIsScan] = React.useState<Boolean>(false);
-    const [studentList, setStudentList] = React.useState<StudentType[] >([
-    //         {
-    //   id: 1,
-    //   first_name: 'karl',
-    //   last_name: 'marx',
-    //   is_present: true,
-    //   lastModified: '2008-09-15T15:53:00+05:00',
-    //   points: 40,
-    // }
-    ]);
+    // const [studentList, setStudentList] = React.useState<StudentType[] >([
+    const [studentList, setStudentList] = React.useState({id:1});
+    const [isLoaded,setIsLoaded] = useState(false);
+    const [rowData,setRowData] = useState([]);
 
     useEffect(()=> {
-        axiosInstance
+        // @ts-ignore
+      function getStudents() {
+              axiosInstance
             .get("/students")
-            .then((response) => setStudentList(response.data) )
-        }, []
-    );
+            .then((response) => {
+              setIsLoaded(true);
+              console.log(response.data);
+              setRowData(response.data);
+            })
+      }
+getStudents()
+              const interval = setInterval(() => getStudents(), 10000)
+        return () => {
+          clearInterval(interval);
+        }
+            },[]);
 
   const Status = React.memo((props: StatusProps) => {
     const { status } = props;
@@ -201,31 +195,6 @@ export default function StylingRowsGrid() {
     return <Status status={params.value} />;
   }
 
-  // const rows: GridRowsProp = [
-  //   {
-  //     id: 1,
-  //     first_name: 'karl',
-  //     last_name: 'marx',
-  //     is_present: true,
-  //     lastModified: '2008-09-15T15:53:00+05:00',
-  //     points: 40,
-  //   },
-  //   {
-  //     id: 2,
-  //     first_name: 'brian',
-  //     is_present: false,
-  //     lastModified: '2008-09-15T15:53:00+05:00',
-  //     points: 3,
-  //   },
-  //   {
-  //     id: 3,
-  //     first_name: 'Kristen',
-  //     last_name: null,
-  //     is_present: false,
-  //     lastModified: '2008-09-15T15:53:00+05:00',
-  //     points: -1,
-  //   },
-  // ];
 
   const rows: GridRowsProp = [studentList]
 
@@ -281,15 +250,9 @@ export default function StylingRowsGrid() {
       moment(params?.value).format("MMMM DD, YYYY h:mm A"),
     },
   ];
-  // const { data2 } = {
-  //   columns: columns,
-  //   rows: rows,
-  // };
+
   return (
 
-      // <Button variant="outlined" startIcon={<Fingerprint />}>
-      //   Delete
-      // </Button>
     <Box sx={{ width: '100%' }}>
           <Box sx={{ height: 400, width: '100%' }}>
 
@@ -297,7 +260,7 @@ export default function StylingRowsGrid() {
       <StyledDataGrid
         // {...data}
         columns={columns}
-        rows={rows}
+        rows={rowData}
         getRowClassName={(params) => `super-app-theme--${params.row.is_present}`}
         getRowId={row => uuidv4()}
         initialState={{
