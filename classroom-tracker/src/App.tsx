@@ -37,6 +37,8 @@ function App() {
     // }
     const activateScanMode =  () => {
         setIsScanMode(true);
+        // @ts-ignore
+        this.setIsScanMode(true);
     }
     return (
 <StyledEngineProvider injectFirst>

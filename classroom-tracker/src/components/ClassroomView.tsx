@@ -19,6 +19,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import Stack from '@mui/material/Stack';
 import Fingerprint from '@mui/icons-material/Fingerprint';
+import {useEffect} from "react";
+import {axiosInstance} from "../service/axios";
+import { v4 as uuidv4 } from 'uuid';
+
+
 
 
 const StyledChip = styled(Chip)(({ theme  }) => ({
@@ -125,7 +130,36 @@ export default function StylingRowsGrid({
                                           isScanModeValue,
                                           onActivateScanMode
                                         }: Props) {
+
+  type StudentType = {
+    id: number,
+    first_name: string,
+    last_name: string,
+    is_present: boolean,
+    lastModified: string,
+    points: number,
+
+  };
+
+export default function StylingRowsGrid() {
     const [isScan, setIsScan] = React.useState<Boolean>(false);
+    const [studentList, setStudentList] = React.useState<StudentType[] >([
+    //         {
+    //   id: 1,
+    //   first_name: 'karl',
+    //   last_name: 'marx',
+    //   is_present: true,
+    //   lastModified: '2008-09-15T15:53:00+05:00',
+    //   points: 40,
+    // }
+    ]);
+
+    useEffect(()=> {
+        axiosInstance
+            .get("/students")
+            .then((response) => setStudentList(response.data) )
+        }, []
+    );
 
   const Status = React.memo((props: StatusProps) => {
     const { status } = props;
@@ -167,31 +201,33 @@ export default function StylingRowsGrid({
     return <Status status={params.value} />;
   }
 
-  const rows: GridRowsProp = [
-    {
-      id: 1,
-      first_name: 'karl',
-      last_name: 'marx',
-      is_present: true,
-      lastModified: '2008-09-15T15:53:00+05:00',
-      points: 40,
-    },
-    {
-      id: 2,
-      first_name: 'brian',
-      is_present: false,
-      lastModified: '2008-09-15T15:53:00+05:00',
-      points: 3,
-    },
-    {
-      id: 3,
-      first_name: 'Kristen',
-      last_name: null,
-      is_present: false,
-      lastModified: '2008-09-15T15:53:00+05:00',
-      points: -1,
-    },
-  ];
+  // const rows: GridRowsProp = [
+  //   {
+  //     id: 1,
+  //     first_name: 'karl',
+  //     last_name: 'marx',
+  //     is_present: true,
+  //     lastModified: '2008-09-15T15:53:00+05:00',
+  //     points: 40,
+  //   },
+  //   {
+  //     id: 2,
+  //     first_name: 'brian',
+  //     is_present: false,
+  //     lastModified: '2008-09-15T15:53:00+05:00',
+  //     points: 3,
+  //   },
+  //   {
+  //     id: 3,
+  //     first_name: 'Kristen',
+  //     last_name: null,
+  //     is_present: false,
+  //     lastModified: '2008-09-15T15:53:00+05:00',
+  //     points: -1,
+  //   },
+  // ];
+
+  const rows: GridRowsProp = [studentList]
 
   const columns: GridColDef[] = [
     {
@@ -263,6 +299,7 @@ export default function StylingRowsGrid({
         columns={columns}
         rows={rows}
         getRowClassName={(params) => `super-app-theme--${params.row.is_present}`}
+        getRowId={row => uuidv4()}
         initialState={{
           sorting: {
             sortModel: [{ field: 'status', sort: 'asc' }],

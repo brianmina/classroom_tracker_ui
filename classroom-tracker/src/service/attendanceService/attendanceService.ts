@@ -8,5 +8,12 @@ class AttendanceService {
             .post(scanStudentUrl)
             .then((response) => response.data )
     }
+
+    getAttendance() {
+        const getAttendance = "/students"
+        return axiosInstance
+            .get(getAttendance)
+            .then((response) => response.data )
+    }
 }
 export const attendanceService = new AttendanceService();
