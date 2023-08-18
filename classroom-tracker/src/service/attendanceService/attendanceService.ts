@@ -2,7 +2,7 @@ import internal from "stream";
 import {axiosInstance} from "../axios";
 
 class AttendanceService {
-    scanStudent(id: number) {
+    scanStudent(id: string) {
         const scanStudentUrl = "/students/" + id as string;
         return axiosInstance
             .post(scanStudentUrl)
