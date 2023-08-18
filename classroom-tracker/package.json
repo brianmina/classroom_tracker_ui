@@ -39,7 +39,7 @@
     "build-prod": "SET NODE_ENV=prod & react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "predeploy": "npm run build",
+    "predeploy": "npm run build-prod",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {

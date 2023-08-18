@@ -202,14 +202,16 @@ getStudents()
     {
       editable: false,
       field: 'first_name',
+                  flex: 1,
+
       headerName: 'First Name',
-      width: 150,
     },
     {
       editable: false,
       field: 'last_name',
+                  flex: 1,
+
       headerName: 'Last Name',
-      width: 150,
     },
     {
       editable: false,
@@ -230,7 +232,16 @@ getStudents()
       editable: false,
       field: 'points',
       headerName: 'Points',
-      width: 120,
+            flex: 1,
+
+      type: 'integer',
+      // valueGetter: ({ value }) => value && new Date(value),
+    },
+    {
+      editable: false,
+      field: 'points',
+      headerName: 'Period',
+            flex: 1,
 
       type: 'integer',
       // valueGetter: ({ value }) => value && new Date(value),
@@ -248,15 +259,49 @@ getStudents()
       // },
       valueFormatter: (params: { value: any; }) =>
       moment(params?.value).format("MMMM DD, YYYY h:mm A"),
+      // TODO: date missing, don't default now
     },
   ];
 
   return (
+<Box height="100vh" display="flex" flexDirection="column">
 
-    <Box sx={{ width: '100%' }}>
-          <Box sx={{ height: 400, width: '100%' }}>
+    <Box
+         // flex={1}
+
+        sx={{
+                overflow:"auto",
+      overflowY:"hidden"
+              // minHeight: '100vh',
+              // maxHeight: '100vh',
+ // flex:{1}
+ //      overflow:"auto"
+ //      width: '90%'
+      // , height: 700
+    }}>
+      <Stack
+  direction="row"
+  justifyContent="flex-end"
+  alignItems="center"
+  spacing={2}
+
+>
+             <Button
+                 // variant="outlined"
+                 startIcon={<Fingerprint />}
+                 variant="contained"
+        onClick={() =>
+            onActivateScanMode()
+        }
+                sx={{
+                  margin: 1
+             }}
+      >
 
 
+         Scan Mode
+             </Button>
+    </Stack>
       <StyledDataGrid
         // {...data}
         columns={columns}
@@ -270,18 +315,7 @@ getStudents()
         }}
       />
     </Box>
-             <Button
-                 // variant="outlined"
-                 startIcon={<Fingerprint />}
-                 variant="contained"
-        onClick={() =>
-            onActivateScanMode()
-        }
-      >
-
-         Scan Mode
-             </Button>
-    </Box>
+</Box>
   );
 }
 
