@@ -239,7 +239,7 @@ getStudents()
     },
     {
       editable: false,
-      field: 'points',
+      field: 'period',
       headerName: 'Period',
             flex: 1,
 

@@ -16,7 +16,7 @@ import StudentScanner from "./components/StudentScanner";
 const handleError = (err: any) => {
   console.error(err);
 };
-
+// TODO: Add favicon and change app name
 
 function App() {
     const [isScanMode, setIsScanMode] = React.useState<boolean>(false);
