@@ -28,6 +28,7 @@ const createConfig = (props) => {
 const Html5QrcodePlugin = (props) => {
 
 
+
     useEffect(() => {
         // when component mounts
         const config = createConfig(props);
@@ -38,6 +39,8 @@ const Html5QrcodePlugin = (props) => {
         }
         const html5QrcodeScanner = new Html5QrcodeScanner(qrcodeRegionId, config, verbose);
         html5QrcodeScanner.render(props.qrCodeSuccessCallback, props.qrCodeErrorCallback);
+
+
 
         // cleanup function when component will unmount
         return () => {
