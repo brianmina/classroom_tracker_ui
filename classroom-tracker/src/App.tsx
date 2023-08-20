@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 // import logo from './logo.svg';
 import './App.css';
 import { attendanceService } from "./service/attendanceService";
@@ -19,7 +19,7 @@ import ClassroomView from './components/ClassroomView';
 import {StyledEngineProvider} from "@mui/material/styles";
 import {Html5QrcodeScanType} from "html5-qrcode";
 import StudentScanner from "./components/StudentScanner";
-import {Alert, AlertTitle, Backdrop, CircularProgress} from "@mui/material";
+import {Alert, AlertColor, AlertTitle, Backdrop, CircularProgress} from "@mui/material";
 
 
 const Transition = React.forwardRef(function Transition(
@@ -39,17 +39,17 @@ const Transition = React.forwardRef(function Transition(
 function App() {
         const [open, setOpen] = React.useState(false);
         const [dialogText, setDialogText] = React.useState("");
-        const [pauseScanning, setPauseScanning] = React.useState(false);
+        const [pauseScanning, setPauseScanning] = React.useState<boolean>(false);
+    const [isScanMode, setIsScanMode] = React.useState<boolean>(false);
+    const [alertSeverity, setAlertSeverity] = React.useState<AlertColor>('error');
 
       const handleClose = () => {
         setOpen(false);
       };
 
-    const [isScanMode, setIsScanMode] = React.useState<boolean>(false);
 
     function setOpenWithTimeout(timeout: number) {
         setOpen(true)
-        setPauseScanning(false)
         setTimeout(()=> {
             setOpen(false)
             setPauseScanning(false)
@@ -62,15 +62,17 @@ function App() {
       const [resultData, setResultData] = useState(undefined);
             async function scanStudentCode(decodedText: any) {
                 try{
-                                    setPauseScanning(true)
                     setLoading(true)
                     const result_data = await attendanceService.scanStudent(decodedText)
                     console.log("0" + result_data.first_name)
                     console.log("1" + result_data.data)
                     if (result_data.is_present) {
                          setDialogText(`${result_data.first_name} ${result_data.last_name} is entering the classroom.`)
+                        setAlertSeverity("success")
                     } else {
                         setDialogText(`${result_data.first_name} ${result_data.last_name} is leaving the classroom.`)
+                                                setAlertSeverity("info")
+
                     }
 
                     // setResultData(result_data)
@@ -85,26 +87,34 @@ function App() {
                 }
             }
 
+    useEffect(() => {
+        console.log('ps' + pauseScanning)
+    },[pauseScanning])
+    const onNewScanResult = (decodedText: any, decodedResult: any) => {
 
-
-    function onNewScanResult(decodedText: any, decodedResult: any) {
-        // Handle on success condition with the decoded text or result.
-       // console.log(`Scan result: ${decodedText}`, decodedResult);
         if (!pauseScanning) {
+            // isPaused = true
+            // setTimeout(()=>{
+            //     isPaused = false
+            // }, 4000)
+            // @ts-ignore
+            setPauseScanning(true)
             console.log(`Scan result: ${decodedText}`, decodedResult);
 
+            console.log("L" + loading + "O"+ open)
 
             if (!isNaN(decodedText)) {
 
                 console.log(decodedText)
                 // @ts-ignore
                 console.log("pausingscanning")
-
-                console.log("pause is " + pauseScanning)
+                // console.log("pause is " + pauseScanning)
                 scanStudentCode(decodedText).then(() => {
                         // console.log(resultData)
                         // @ts-ignore
                         // setDialogText(resultData?.name)
+                        //         setPauseScanning(true)
+
                         setOpenWithTimeout(3000)
 
                     }
@@ -132,6 +142,8 @@ function App() {
         // @ts-ignore
         // this.setIsScanMode(true);
     }
+    // @ts-ignore
+    // @ts-ignore
     return (
 <StyledEngineProvider injectFirst>
 
@@ -157,7 +169,7 @@ function App() {
           {/*<DialogContentText id="alert-dialog-slide-description">*/}
           {/*    {dialogText}*/}
           {/*</DialogContentText>*/}
-            <Alert severity="error">
+            <Alert severity={alertSeverity}>
   <AlertTitle>{dialogText}</AlertTitle>
   This is an error {dialogText} — <strong>check it out!</strong>
 </Alert>
