@@ -40,6 +40,7 @@
 
 .App {
   text-align: center;
+  background-color: black;
 }
 
 .App-logo {
@@ -82,8 +83,10 @@
 }
 
 #html5qr-code-full-region {
-  background-color: #adb5bd;
-  color: #282c34;
+  /*background-color: #adb5bd;*/
+  /*color: #282c34;  */
+  color: #adb5bd;
+  background-color: #282c34;
   font-size: 12pt;
 }
 

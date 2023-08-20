@@ -1,5 +1,6 @@
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import { useEffect } from 'react';
+import {Container, Slide} from "@mui/material";
 
 const qrcodeRegionId = "html5qr-code-full-region";
 
@@ -21,7 +22,11 @@ const createConfig = (props) => {
     return config;
 };
 
+
+
+
 const Html5QrcodePlugin = (props) => {
+
 
     useEffect(() => {
         // when component mounts
@@ -43,8 +48,23 @@ const Html5QrcodePlugin = (props) => {
     }, []);
 
     return (
-        <div id={qrcodeRegionId} />
+
+        <Container style={{
+                // width: '100vh',
+
+                    display: "flex",
+        alignItems: "center",
+        height: "100vh",
+        justifyContent: "center",
+            backgroundColor: "black"
+        }}>
+
+
+            <div id={qrcodeRegionId} />
+        </Container>
     );
 };
 
 export default Html5QrcodePlugin;
+
+
