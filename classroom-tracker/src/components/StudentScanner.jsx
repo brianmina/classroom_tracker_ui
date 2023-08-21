@@ -1,6 +1,6 @@
 // import React, { useState } from 'react';
 // import logo from './logo.svg';
-// // import './App.css';
+// // import './Home.css';
 //
 //
 // import {QrReader} from 'react-qr-reader';
@@ -54,9 +54,9 @@
 //          constraints={{facingMode}}/>
 //         <p>{data}</p>
 //     </>
-// //     <Box className="App">
-// //         <section className="App-section">
-// //         <div className="App-section-title">Classroom Tracker</div>
+// //     <Box className="Home">
+// //         <section className="Home-section">
+// //         <div className="Home-section-title">Classroom Tracker</div>
 // // <h2>
 // //         Last Scan:
 // //         {selected}

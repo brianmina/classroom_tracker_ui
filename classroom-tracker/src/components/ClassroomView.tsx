@@ -1,5 +1,7 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
+import {useNavigate} from "react-router-dom";
+
 import {
   DataGrid,
   GridColDef,
@@ -33,7 +35,19 @@ import { ctUtils } from "../service/utils";
 import LogoutIcon from "@mui/icons-material/Logout";
 import LoginIcon from "@mui/icons-material/Login";
 import { Container, Grid } from "@mui/material";
-// import Container from "@mui/material/Container";
+import Fab from "@mui/material/Fab";
+import NavigationIcon from "@mui/icons-material/Navigation";
+import {googleLogout} from "@react-oauth/google";
+
+const fabStyle = {
+  margin: 0,
+  bottom: 'auto',
+  right: 20,
+  top: 20,
+  left: 'auto',
+  position: 'fixed',
+};
+
 
 const StyledChip = styled(Chip)(({ theme }) => ({
   justifyContent: "left",
@@ -141,6 +155,7 @@ export default function StylingRowsGrid({
   const [studentList, setStudentList] = React.useState({ id: 1 });
   const [isLoaded, setIsLoaded] = useState(false);
   const [rowData, setRowData] = useState([]);
+  const navigate = useNavigate();
 
   function CustomToolbar() {
     return (
@@ -161,6 +176,18 @@ export default function StylingRowsGrid({
             ScanMode
           </Button>
         </Grid>
+        {/*TOOLBAR LOGOUT ICON*/}
+        {/*<Grid>*/}
+        {/*  <Button*/}
+        {/*      // variant="contained"*/}
+        {/*          size="small"*/}
+        {/*          startIcon={<LogoutIcon />}*/}
+        {/*          color="error"*/}
+        {/*  >*/}
+        {/*    /!*<LogoutIcon sx={{ mr: 1 }} />*!/*/}
+        {/*    Logout*/}
+        {/*  </Button>*/}
+        {/*</Grid>*/}
       </GridToolbarContainer>
     );
   }
@@ -286,6 +313,15 @@ export default function StylingRowsGrid({
     },
   ];
 
+  const logoutGoogle =  () => {
+
+    console.log("logging out")
+    localStorage.clear();
+
+    navigate('/login');
+    googleLogout();
+  }
+
   return (
     <Container maxWidth="lg">
       {/*<Container height="100vh" display="flex" flexDirection="column">*/}
@@ -330,8 +366,7 @@ export default function StylingRowsGrid({
             // },
             sorting: {
               sortModel: [
-                { field: "status", sort: "asc" },
-                { field: "last_modified", sort: "desc" },
+                { field: "status", sort: "asc" }
               ],
             },
             pagination: { paginationModel: { pageSize: 30 } },
@@ -339,7 +374,17 @@ export default function StylingRowsGrid({
           pageSizeOptions={[30, 50, 100]}
         />
         {/*</div>*/}
+
+       <Fab
+       color="error"
+       sx={fabStyle}
+       onClick={logoutGoogle}
+        >
+        <LogoutIcon/>
+      </Fab>
+
       </Box>
+
     </Container>
   );
 }
